@@ -22,7 +22,7 @@ const posts = await getCollection("blog");
 
       <!-- BLOG GRID (STEP 3.2) -->
       <div class="blog-grid">
-        {posts.map((post) => (
+        {posts.map((post: any) => (
           <div class="card">
             <a href={`/blog/${post.slug}/`}>
               <h3>{post.data.title}</h3>

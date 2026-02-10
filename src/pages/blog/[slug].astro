@@ -11,9 +11,10 @@ export async function getStaticPaths() {
 
 // Use getEntryBySlug to fetch the current post based on the route slug.
 // Call it via an `unknown` cast to avoid TypeScript 'never' issues in some environments.
-const post: any = await (getEntryBySlug as unknown as any)("blog", Astro.params.slug as string);
+const slug = (Astro.params as any).slug as string;
+const post: any = await (getEntryBySlug as unknown as any)("blog", slug);
 if (!post) {
-  throw new Error("Post not found: " + Astro.params.slug);
+  throw new Error("Post not found: " + slug);
 }
 
 // Compute formatted publish date
