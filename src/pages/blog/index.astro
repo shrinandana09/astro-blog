@@ -1,0 +1,119 @@
+---
+import Header from "../../components/header.astro";
+import Footer from "../../components/Footer.astro";
+import "../../styles/global.css";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("blog");
+const sortedPosts = posts.sort(
+  (a: any, b: any) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog | Astro Blog</title>
+    <style>
+      .blog-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .blog-header {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+
+      .blog-header h1 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+      }
+
+      .blog-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 25px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .blog-card h3 {
+        color: #0066cc;
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+      }
+
+      .blog-card p {
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+
+      .blog-meta {
+        font-size: 0.9rem;
+        color: #999;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .no-posts {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+
+    <main class="blog-container">
+      <div class="blog-header">
+        <h1>Blog</h1>
+        <p>Stories from my web development journey</p>
+      </div>
+
+      {sortedPosts.length > 0 ? (
+        <div class="blog-grid">
+          {sortedPosts.map((post: any) => (
+            <a href={`/blog/${post.slug}/`} class="blog-card">
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
+              <div class="blog-meta">
+                <span>📅 {post.data.pubDate.toLocaleDateString()}</span>
+                {post.data.author && <span>✍️ {post.data.author}</span>}
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="no-posts">
+          <p>No blog posts yet. Check back soon!</p>
+        </div>
+      )}
+    </main>
+
+    <Footer />
+  </body>
+</html>
